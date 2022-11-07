@@ -1,12 +1,13 @@
 <template>
 	<swiper
+		class="swiper-container"
 		:current="activeIndex"
 		@change="activeChange">
 		<swiper-item
 			v-for="(item, index) in labelList"
 			:key="index">
 			<view class="swiper-item">
-				{{ item.name }}
+				<ListItem></ListItem>
 			</view>
 		</swiper-item>
 	</swiper>
@@ -39,6 +40,12 @@
 	}
 </script>
 
-<style>
-
+<style scoped lang="scss">
+	.swiper-container {
+		height: 100%;
+		.swiper-item {
+			height: 100%;
+			overflow: hidden;
+		}
+	}
 </style>
