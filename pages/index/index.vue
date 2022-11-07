@@ -1,7 +1,17 @@
 <template>
 	<view class="home-container">
 		<NavBar></NavBar>
-		<TabBar :labelList="labelList"></TabBar>
+		<TabBar
+			:activeIndex="activeIndex"
+			:labelList="labelList"
+			@activeIndexChange="activeIndexChange">
+		</TabBar>
+		<ArticleList
+			:activeIndex="activeIndex"
+			class="list-container"
+			:labelList="labelList"
+			@activeIndexChange="activeIndexChange">
+		  </ArticleList>
 	</view>
 </template>
 
@@ -12,6 +22,7 @@
 		},
 		data() {
 			return {
+				activeIndex: 0,
 				labelList: []
 			}
 		},
@@ -20,14 +31,28 @@
 			async _initLabelList() {
 				let res = await this.$http.get_label_list();
 				this.labelList = res || [];
+			},
+			activeIndexChange(index) {
+				this.activeIndex = index;
 			}
 		}
 	}
 </script>
 
 <style scoped lang="scss">
-	.container {
-		@include flex(flex-start, column);
-		color: $base-color;
+	page {
+		height: 100%;
+		display: flex;
+	}
+	.home-container {
+		overflow: hidden;
+		flex:1;
+		box-sizing: border-box;
+		@include flex(flex-start,column);
+		align-items: inherit;
+	}
+	.list-container {
+		flex: 1;
+		box-sizing: border-box;
 	}
 </style>
