@@ -1,15 +1,27 @@
 <template>
 	<view class="home-container">
 		<NavBar></NavBar>
-		<view v-for="item in 100" :key="item">
-			{{item}}
-		</view>
+		<TabBar :labelList="labelList"></TabBar>
 	</view>
 </template>
 
 <script>
 	export default {
-		
+		onLoad() {
+			this._initLabelList();
+		},
+		data() {
+			return {
+				labelList: []
+			}
+		},
+		methods: {
+			// 初始化获取标签
+			async _initLabelList() {
+				let res = await this.$http.get_label_list();
+				this.labelList = res || [];
+			}
+		}
 	}
 </script>
 
