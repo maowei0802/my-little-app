@@ -30,7 +30,7 @@
 			// 初始化获取标签
 			async _initLabelList() {
 				let res = await this.$http.get_label_list();
-				this.labelList = res || [];
+				this.labelList = [{name: '全部', id: 0}, ...res] || [];
 			},
 			activeIndexChange(index) {
 				this.activeIndex = index;
@@ -39,7 +39,7 @@
 	}
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 	page {
 		height: 100%;
 		display: flex;

@@ -6,6 +6,7 @@ export default ({name,data={}}) => {
 		uni.showLoading({});
 		uniCloud.callFunction({
 			name,
+			data,
 			success({result}) {
 				if(+result.code === 0) {
 					resolve(result.data);

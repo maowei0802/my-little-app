@@ -1,9 +1,10 @@
 <template>
 	<view class="list-scroll-container">
-		<scroll-view scroll-y="true" class="list-scroll">
+		<scroll-view scroll-y="true" class="list-scroll" @scrolltolower="loadMore">
 			<view>
-				<ListCard v-for="(item, index) in itemList" :key="index" :item="item"></ListCard>
+				<ListCard v-for="item in articleList" :key="item._id" :item="item"></ListCard>
 			</view>
+			<uni-load-more :status="articleData.loading || 'loading'"></uni-load-more>
 		</scroll-view>
 	</view>
 </template>
@@ -13,15 +14,26 @@
 		name:"ListItem",
 		data() {
 			return {
-				itemList:[
-					{mode:'base'},
-					{mode:'column'},
-					{mode:'image'},
-					{mode:'base'},
-					{mode:'base'},
-				]
 			};
-		}
+		},
+		props: {
+			articleList: {
+				type: Array,
+				default: () => [],
+			},
+			articleData: {
+				type: Object,
+				default: () => {
+					loading: 'loading'
+				}
+			}
+		},
+		methods: {
+			// 触底事件
+			loadMore() {
+				this.$emit('loadMore')
+			}
+		},
 	}
 </script>
 
