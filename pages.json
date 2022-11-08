@@ -33,6 +33,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/userInfo/login/login",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "用户登录",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
