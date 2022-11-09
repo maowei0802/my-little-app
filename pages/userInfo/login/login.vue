@@ -43,6 +43,7 @@
 </template>
 
 <script>
+	import {mapMutations} from 'vuex'
 	export default {
 		data() {
 			return {
@@ -57,12 +58,32 @@
 			}
 		},
 		methods: {
+			...mapMutations(['updateUserInfo']),
 			// 用户登录验证
 			async userLoginSubmit() {
 				this.loading = true;
-				this.$refs.form.validate((res, data) => {
-					if(res === null) {
-						
+				this.$refs.form.validate((val, data) => {
+					if(val === null) {
+						let sendData = {
+							type: this.type,
+							loginName: this.formData.loginName,
+							password: this.formData.password
+						}
+						this.$http.user_login(sendData).then((res) => {
+							uni.showLoading({
+								title: '登录成功!',
+								icon: "none",
+							});
+							this.updateUserInfo(res);
+							let timeId = setTimeout(() => { 
+								uni.navigateBack();
+								this.loading = false;
+								console.log(this);
+								clearTimeout(timeId); 
+							}, 1500);
+						}).catch(() => {
+							this.loading = false;
+						});
 					} else {
 						this.loading = false;
 					}

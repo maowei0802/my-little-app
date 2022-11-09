@@ -35,7 +35,7 @@ export default {
 			methods: {
 				// 验证用户名
 				validateLoginName(rule, val, data, callback) {
-					if(val.length < 6) {
+					if(val.length < 5) {
 						callback('用户名长度不正确')
 					}
 					return true;

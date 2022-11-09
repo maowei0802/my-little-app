@@ -14,7 +14,8 @@ export default ({name,data={}}) => {
 					uni.showToast({
 						icon: "none",
 						title: result.msg
-					})
+					});
+					reject(result)
 				}
 			},
 			fail(err) {

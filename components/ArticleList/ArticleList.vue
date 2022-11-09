@@ -46,10 +46,12 @@
 			},
 		},
 		methods: {
+			// 页面改变事件
 			activeChange(e) {
 				if (e.detail.current === this.activeIndex) return;
 				this.$emit('activeIndexChange', e.detail.current);
 			},
+			// 请求数据
 			async getArticleList() {
 				let sendData = {
 					classify: this.labelList[this.activeIndex].name,
@@ -79,7 +81,7 @@
 			// 触底事件
 			loadMore() {
 				let result = this.touch();
-				if(result) {
+				if(!result) {
 					this.articleData[this.activeIndex].page++;
 					this.getArticleList();
 				}
