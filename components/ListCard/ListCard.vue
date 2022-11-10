@@ -9,7 +9,7 @@
 			<view class="card-base-content">
 				<view class="card-base-content-title">
 					<text>{{ item.title }}</text>
-					<SaveLikes></SaveLikes>
+					<SaveLikes :articleId="item._id"></SaveLikes>
 				</view>
 				<view class="content-desc">
 					<view class="label">{{ item.classify }}</view>
@@ -21,7 +21,7 @@
 		<view class="card-public card-column" v-else-if="item.mode === 'column'">
 			<view class="card-column-top">
 				<text>{{ item.title }}</text>
-				<SaveLikes></SaveLikes>
+				<SaveLikes :articleId="item._id"></SaveLikes>
 			</view>
 			<view class="card-column-middle">
 				<view class="image-container" v-for="(ele,index) in item.cover.slice(0,3)" :key="index">
@@ -45,7 +45,7 @@
 			</view>
 			<view class="card-image-middle">
 				<text>{{ item.title }}</text>
-				<SaveLikes></SaveLikes>
+				<SaveLikes :articleId="item._id"></SaveLikes>
 			</view>
 			<view class="content-desc">
 				<view class="label">{{ item.classify }}</view>

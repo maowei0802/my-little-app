@@ -39,7 +39,6 @@
 </template>
 
 <script>
-	import {mapMutations} from 'vuex'
 	export default {
 		data() {
 			return {
@@ -64,8 +63,6 @@
 			clearInterval(this.codeTimeId);
 		},
 		methods: {
-			// vuex
-			...mapMutations(['updateUserInfo']),
 			// 获取验证码
 			async getCode() {
 				this.$refs.form.validateField(['phone'], async (res) => {
