@@ -1,7 +1,7 @@
 <template>
 	<view class="code-container">
-		<view class="vCode-btn">
-			获取验证码
+		<view class="vCode-btn" @click="getCode">
+			{{ codeState ? `${time}秒后重新获取` : '获取验证码' }}
 		</view>
 	</view>
 </template>
@@ -13,7 +13,24 @@
 			return {
 				
 			};
-		}
+		},
+		props: {
+			codeState: {
+				type: Boolean,
+				default: false
+			},
+			time: {
+				type: Number,
+				default: 60,
+			}
+		},
+		methods: {
+			// 获取验证码
+			getCode() {
+				if(this.codeState) return;
+				this.$emit('getCode');
+			},
+		},
 	}
 </script>
 

@@ -9,6 +9,7 @@ export default ({name,data={}}) => {
 			data,
 			success({result}) {
 				if(+result.code === 0) {
+					console.log(result);
 					resolve(result.data);
 				} else {
 					uni.showToast({

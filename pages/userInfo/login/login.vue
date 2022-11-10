@@ -11,8 +11,8 @@
 			</view>
 		</view>
 		<!-- 表单部分 -->
-		<uni-forms v-if="type ==='account'" class="form" ref="form" :modelValue="formData" :rules="userRulesAccount">
-			<view class="">
+		<uni-forms class="form" ref="form" :modelValue="formData">
+			<view class="" v-if="type ==='account'">
 				<uni-forms-item label="账号" name="loginName">
 					<input placeholder-class="placeholder" class="form-input" type="text" placeholder="请输入账号" v-model="formData.loginName" />
 				</uni-forms-item>
@@ -20,20 +20,16 @@
 					<input placeholder-class="placeholder" class="form-input" type="password" placeholder="请输入密码" v-model="formData.password" />
 				</uni-forms-item>
 			</view>
-		</uni-forms>
-		
-		<uni-forms v-else class="form" ref="form" :modelValue="formData" :rules="userRulesPhone">
-			<view class="">
+			<view class="" v-else>
 				<uni-forms-item label="手机号" name="phone">
 					<input maxlength="11" placeholder-class="placeholder" class="form-input" type="number" placeholder="请输入手机号" v-model="formData.phone" />
 				</uni-forms-item>
 				<uni-forms-item label="验证码" name="vCode">
 					<input placeholder-class="placeholder" class="form-input" type="text" placeholder="请输入验证码" v-model="formData.vCode" />
-					<SendCode class="code-component"></SendCode>
+					<SendCode @getCode="getCode" :time="time" :codeState="codeState" class="code-component"></SendCode>
 				</uni-forms-item>
 			</view>
 		</uni-forms>
-		
 		<button class="login-btn" @click="userLoginSubmit" :disabled="loading" :loading="loading">立即登录</button>
 		<view class="footer-select-container">
 			<text>注册</text>
@@ -47,6 +43,10 @@
 	export default {
 		data() {
 			return {
+				code: null,
+				time: 60,
+				codeTimeId: null,
+				codeState: false,
 				loading: false,
 				type:'account',
 				formData:{
@@ -57,28 +57,78 @@
 				}
 			}
 		},
+		onReady() {
+			this.$refs.form.setRules(this.userRules);
+		},
+		beforeDestroy() {
+			clearInterval(this.codeTimeId);
+		},
 		methods: {
+			// vuex
 			...mapMutations(['updateUserInfo']),
+			// 获取验证码
+			async getCode() {
+				this.$refs.form.validateField(['phone'], async (res) => {
+					if(res === null) {
+						let result = await this.$http.get_code();
+						this.code = result.data;
+						this.codeState = true;
+						uni.showToast({
+							title: result.msg,
+							icon: 'none',
+							duration: 2000
+						});
+						this.startTimer();
+					}
+				});
+			},
+			// 启动定时器
+			startTimer() {
+				this.codeTimeId = setInterval(() => {
+					if(this.time === 1) {
+						this.codeState = false;
+						this.time = 60;
+						clearInterval(this.codeTimeId);
+					}
+					this.time--;
+				}, 1000);
+			},
 			// 用户登录验证
 			async userLoginSubmit() {
 				this.loading = true;
-				this.$refs.form.validate((val, data) => {
+				let validateArr = this.type === 'account' ? ['loginName', 'password'] : ['phone', 'vCode'];
+				this.$refs.form.validateField(validateArr, (val, data) => {
 					if(val === null) {
+						if(this.type !== 'account' && this.code === null) {
+							uni.showToast({
+								title: '请先获取验证码!',
+								icon: "none",
+							});
+							this.loading = false
+							return;
+						} else if(this.type !== 'account' && this.formData.vCode !== this.code) {
+							uni.showToast({
+								title: '验证码输入错误，请重新核对后填写!',
+								icon: "none",
+							});
+							this.loading = false
+							return;
+						}
 						let sendData = {
 							type: this.type,
 							loginName: this.formData.loginName,
 							password: this.formData.password
 						}
 						this.$http.user_login(sendData).then((res) => {
-							uni.showLoading({
+							uni.showToast({
 								title: '登录成功!',
 								icon: "none",
 							});
+							this.code = null;
 							this.updateUserInfo(res);
 							let timeId = setTimeout(() => { 
 								uni.navigateBack();
 								this.loading = false;
-								console.log(this);
 								clearTimeout(timeId); 
 							}, 1500);
 						}).catch(() => {

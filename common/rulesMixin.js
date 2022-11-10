@@ -4,7 +4,7 @@ export default {
 			data() {
 				return {
 					mobileReg: /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/,
-					userRulesAccount: {
+					userRules: {
 						loginName: {
 							rules: [
 								{required: true, errorMessage: '账户名不能为空'},
@@ -16,8 +16,6 @@ export default {
 								{required: true, errorMessage: '密码不能为空'},
 							]
 						},
-					},
-					userRulesPhone: {
 						phone: {
 						    rules: [
 							    { required: true, errorMessage: "电话号码不能为空" },
@@ -29,7 +27,7 @@ export default {
 							    { required: true, errorMessage: "验证码不能为空" },
 						    ]
 						},
-					}
+					},
 				}
 			},
 			methods: {
@@ -42,7 +40,7 @@ export default {
 				},
 				/* 验证手机号码 */
 				validatePhone (rule, val, data, callback) {
-					if(this.mobileReg.test(val)) {
+					if(!this.mobileReg.test(val)) {
 						callback('手机号码格式不正确');
 					}
 					return true
